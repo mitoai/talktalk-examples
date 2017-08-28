@@ -7,7 +7,7 @@ class GreetingHandler extends Handler {
   intent = 'greeting'
 
   async handleFirstMessage (msg): Promise<*> {
-    this.sendMessage({message: 'Hello there!'})
+    this.sendReply({message: 'Hello there!'})
     return {}
   }
 
@@ -32,7 +32,7 @@ class TimerHandler extends Handler {
       this.jumpTo(SetTimerHandler, {duration})
       return
     }
-    await this.sendMessage({message: 'When do you want your timer to start?'})
+    await this.sendReply({message: 'When do you want your timer to start?'})
     return {}
   }
 
@@ -42,7 +42,7 @@ class TimerHandler extends Handler {
       this.jumpTo(SetTimerHandler, {duration})
       return
     }
-    await this.sendMessage({message: 'Sorry, I did not understand that. Please try again.'})
+    await this.sendReply({message: 'Sorry, I did not understand that. Please try again.'})
     return {}
   }
 }
@@ -56,18 +56,18 @@ class SetTimerHandler extends Handler {
   async handleJump (context: { duration: number }) {
     const id = Math.floor(Math.random() * 100000000).toString()
     setTimeout(() => this._timer(id), context.duration * 1000)
-    await this.sendMessage({message: `I've set a timer with id ${id}`})
+    await this.sendReply({message: `I've set a timer with id ${id}`})
   }
 
   async handlePostback (postback: { id: string }): * {
-    await this.sendMessage({message: `A timer with id ${postback.id} went off`})
+    await this.sendReply({message: `A timer with id ${postback.id} went off`})
   }
 }
 
 class FallbackHandler extends Handler {
 
   async handleMessage () {
-    await this.sendMessage({message: 'Sorry. I did not get that.'})
+    await this.sendReply({message: 'Sorry. I did not get that.'})
   }
 }
 

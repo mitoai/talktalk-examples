@@ -6,7 +6,7 @@ import { Dispatcher, Handler } from 'talktalk'
 
 class EchoHandler extends Handler {
   async handleFirstMessage (message: CliMessage): Promise<*> {
-    await this.sendMessage({message: message.message})
+    await this.sendReply({message: message.message})
   }
 }
 
