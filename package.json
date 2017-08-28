@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/mitoai/talktalk-examples#readme",
   "dependencies": {
-    "talktalk": "0.0.2",
+    "talktalk": "0.0.3",
     "node-wit": "^4.3.0",
     "superagent": "^3.6.0"
   },
@@ -30,7 +30,7 @@
     "babel-preset-stage-0": "^6.24.1",
     "babel-register": "^6.26.0",
     "config": "^1.26.2",
-    "eslint": "^3.9.1",
+    "eslint": "^4.5.0",
     "eslint-config-standard": "^10.2.1",
     "eslint-config-standard-flow": "^1.0.1",
     "eslint-plugin-import": "^2.7.0",
