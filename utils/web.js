@@ -1,6 +1,6 @@
 // @flow
 
-import { BaseMessage } from 'talktalk/lib/dispatcher'
+import type { BaseMessage } from 'talktalk/lib/dispatcher'
 import type { WitEntities } from './wit'
 import http from 'http'
 import config from 'config'
@@ -53,14 +53,16 @@ function serverHandler (req, res) {
 
 export class WebWitDispatcher extends Dispatcher<WitWebMessage, WebReply> {
 
+  io = null
+
   constructor () {
-    super((reply, message) => this.io.to(message.sender).emit('message', reply))
+    super(async (reply, message) => this && this.io ? this.io.to(message.sender).emit('message', reply) : null)
   }
 
   start () {
     const server = http.createServer(serverHandler)
-    this.io = SocketIo(server)
-    this.io.on('connection', (socket) => {
+    const io = SocketIo(server)
+    io.on('connection', (socket) => {
       const userId = socket.handshake.query.userId
       if (!userId) return
       console.log('Connected user: ' + userId)
@@ -72,7 +74,8 @@ export class WebWitDispatcher extends Dispatcher<WitWebMessage, WebReply> {
       console.log('Joining room ' + userId)
       socket.join(userId)
     })
-    this.io.on('error', (err) => console.error(err))
+    io.on('error', (err) => console.error(err))
+    this.io = io
     server.listen(config.get('web.port'))
   }
 }

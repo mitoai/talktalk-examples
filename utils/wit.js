@@ -8,14 +8,12 @@ const wit = new Wit({accessToken})
 export type WitEntityMatch = {
   confidence: number,
   value: string,
-  normalized?: {value: number}
+  normalized?: { value: number }
 }
-
 
 export type WitEntities = {
   [string]: WitEntityMatch[]
 }
-
 
 export function findBestCandidate (matches: WitEntityMatch[]): WitEntityMatch {
   return matches

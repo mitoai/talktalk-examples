@@ -35,7 +35,6 @@ export function startCliBot (dispatcher: Dispatcher<CliMessage, CliReply>) {
   prompt(dispatcher, rl, async msg => msg)
 }
 
-
 async function enrichMessage (message: CliMessage): Promise<WitCliMessage> {
   const entities = await witEntitiesFromMessage(message.message)
   const intent = entities.intent && findBestCandidate(entities.intent).value
