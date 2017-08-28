@@ -16,10 +16,14 @@ function serverHandler (req, res) {
   res.setHeader('Content-Type', 'text/html')
   res.writeHead(200)
   res.end(`
-  <ul id="Console" style="list-style-type: none; margin: 0; padding: 2em 0;"></ul>
+<html style="height: 100%">
+   <body style='background: #e6e6e6;font-family: Arial, "Helvetica Neue", Helvetica, sans-serif; font-size: 12pt; height: 100%; padding: 0; margin: 0'>
+  <div style="position: absolute; bottom: 0">
+  <ul id="Console" style="list-style-type: none; margin: 0; padding: 2em 0"></ul>
   <form id="Form">
     <input type="text" id="Input" style="border: 0.1em solid #aaa; width: 30em; height: 3em; line-height: 3em; padding: 1em;"/>
   </form>
+</div>
   <script src="/socket.io/socket.io.js"></script>
   <script>
         var input = document.querySelector("#Input")
@@ -43,6 +47,7 @@ function serverHandler (req, res) {
           return false
         }
   </script>
+  </body></html>
 `)
 }
 
