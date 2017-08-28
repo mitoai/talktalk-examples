@@ -1,9 +1,9 @@
 // @flow
 
 import { Handler } from 'talktalk'
-import { findBestCandidate } from '../utils/wit'
-import { WebWitDispatcher } from '../utils/web'
-import { fetchGif } from '../utils/giphy'
+import { findBestCandidate } from '../../utils/wit'
+import { WebWitDispatcher } from '../../utils/web'
+import { fetchGif } from '../../utils/giphy'
 
 class GreetingHandler extends Handler {
   intent = 'greeting'
