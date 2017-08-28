@@ -24,6 +24,11 @@
     "superagent": "^3.6.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-preset-env": "^1.5.1",
+    "babel-preset-flow": "^6.23.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "babel-register": "^6.26.0",
     "config": "^1.26.2",
     "eslint": "^3.9.1",
     "eslint-config-standard": "^10.2.1",
