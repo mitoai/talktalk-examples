@@ -1,7 +1,7 @@
 // @flow
 
-import { startCliBot, cliReplier } from '../../utils'
-import type { CliMessage, CliReply } from '../../utils'
+import { startCliBot, cliReplier } from '../../utils/cli'
+import type { CliMessage, CliReply } from '../../utils/cli'
 import { Dispatcher, Handler } from 'talktalk'
 
 class CounterHandler extends Handler {

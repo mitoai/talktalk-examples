@@ -1,7 +1,8 @@
 // @flow
-import { cliReplier, findBestCandidate, startCliWitBot } from '../../utils'
-import type { CliReply, WitMessage } from '../../utils'
+import { cliReplier, startCliWitBot } from '../../utils/cli'
+import type { CliReply, WitCliMessage } from '../../utils/cli'
 import { Dispatcher, Handler } from 'talktalk'
+import { findBestCandidate } from '../../utils/wit'
 
 class GreetingHandler extends Handler {
   intent = 'greeting'
@@ -21,7 +22,7 @@ function findDuration (message): ?number {
   return durationCandidate.normalized.value
 }
 
-const dispatcher: Dispatcher<WitMessage, CliReply> = new Dispatcher(cliReplier)
+const dispatcher: Dispatcher<WitCliMessage, CliReply> = new Dispatcher(cliReplier)
 
 class TimerHandler extends Handler {
   intent = 'timer'

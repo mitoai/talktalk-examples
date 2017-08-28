@@ -1,0 +1,73 @@
+// @flow
+
+import { BaseMessage } from 'talktalk/lib/dispatcher'
+import type { WitEntities } from './wit'
+import http from 'http'
+import config from 'config'
+import SocketIo from 'socket.io'
+import { Dispatcher } from 'talktalk'
+import { findBestCandidate, witEntitiesFromMessage } from './wit'
+
+export type WebMessage = BaseMessage & { message: string }
+export type WebReply = { message: string } | { gif: string }
+export type WitWebMessage = WebMessage & { entities: WitEntities }
+
+function serverHandler (req, res) {
+  res.setHeader('Content-Type', 'text/html')
+  res.writeHead(200)
+  res.end(`
+  <ul id="Console" style="list-style-type: none; margin: 0; padding: 2em 0;"></ul>
+  <form id="Form">
+    <input type="text" id="Input" style="border: 0.1em solid #aaa; width: 30em; height: 3em; line-height: 3em; padding: 1em;"/>
+  </form>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+        var input = document.querySelector("#Input")
+        var form = document.querySelector("#Form")
+        var userId = "user" + Math.floor(Math.random() * 100000000)
+        var socket = io('?userId=' + userId)
+        var cons = document.querySelector("#Console") 
+        function appendMessage(sender, message) {
+          var li = document.createElement("li")
+          li.innerHTML = "<div><span style='padding: 1em; min-width: 20em'>" + sender + "</span>"+ (message.message ? message.message : "<img src='" + message.gif + "'/>" )+"</div>"
+          cons.appendChild(li)
+        }
+        socket.on('message', function (data) {
+          appendMessage('Bot', data)
+        });
+        form.onsubmit = function (evt) {
+          socket.emit("message", {type: 'message', sender: userId, message: input.value})
+          appendMessage('You', {message: input.value})
+          input.value = ""
+          evt.preventDefault()
+          return false
+        }
+  </script>
+`)
+}
+
+export class WebWitDispatcher extends Dispatcher<WitWebMessage, WebReply> {
+
+  constructor () {
+    super((reply, message) => this.io.to(message.sender).emit('message', reply))
+  }
+
+  start () {
+    const server = http.createServer(serverHandler)
+    this.io = SocketIo(server)
+    this.io.on('connection', (socket) => {
+      const userId = socket.handshake.query.userId
+      if (!userId) return
+      console.log('Connected user: ' + userId)
+      socket.on('message', async msg => {
+        const entities = await witEntitiesFromMessage(msg.message)
+        const intent = entities.intent && findBestCandidate(entities.intent)
+        this.handleMessage({...msg, entities, intent: intent ? intent.value : undefined})
+      })
+      console.log('Joining room ' + userId)
+      socket.join(userId)
+    })
+    this.io.on('error', (err) => console.error(err))
+    server.listen(config.get('web.port'))
+  }
+}

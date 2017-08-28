@@ -3,3 +3,7 @@ wit:
 
 giphy:
   apiKey: your-giphy-api-key
+
+
+web:
+  port: 3001

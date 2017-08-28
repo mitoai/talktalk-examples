@@ -1,8 +1,10 @@
 // @flow
 
-import { cliReplier, fetchGif, findBestCandidate, startCliWitBot } from '../../utils'
-import type { CliReply, WitMessage } from '../../utils'
+import { cliReplier, startCliWitBot } from '../../utils/cli'
+import type { CliReply, WitCliMessage } from '../../utils/cli'
 import { Handler, Dispatcher } from 'talktalk'
+import { findBestCandidate } from '../../utils/wit'
+import { fetchGif } from '../../utils/giphy'
 
 class GreetingHandler extends Handler {
   intent = 'greeting'
@@ -38,7 +40,7 @@ class GifHandler extends Handler {
   }
 }
 
-const dispatcher: Dispatcher<WitMessage, CliReply> = new Dispatcher(cliReplier)
+const dispatcher: Dispatcher<WitCliMessage, CliReply> = new Dispatcher(cliReplier)
 
 dispatcher.registerHandler(GreetingHandler)
 dispatcher.registerHandler(GifHandler)
