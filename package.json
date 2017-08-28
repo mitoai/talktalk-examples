@@ -20,7 +20,7 @@
   "homepage": "https://github.com/mitoai/talktalk-examples#readme",
   "dependencies": {
     "config": "^1.26.2",
-    "talktalk": "0.0.3",
+    "talktalk": "0.0.4",
     "node-wit": "^4.3.0",
     "superagent": "^3.6.0"
   },
