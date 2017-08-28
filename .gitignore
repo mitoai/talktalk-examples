@@ -1,2 +1,3 @@
 config/local.yml
 .idea
+node_modules
