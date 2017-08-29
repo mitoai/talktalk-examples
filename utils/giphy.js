@@ -12,7 +12,7 @@ export async function fetchGif (q: string): Promise<?string> {
   if (!body.data.length) {
     return null
   }
-  return body.data[0].images.fixed_height.url
+  return body.data[0].images.fixed_width_downsampled.url
 }
 
 export async function fetchRandomGif (): Promise<?string> {
@@ -21,5 +21,5 @@ export async function fetchRandomGif (): Promise<?string> {
     .query({
       api_key: config.get('giphy.apiKey')
     })
-  return body.data.fixed_height_downsampled_url
+  return body.data.fixed_width_downsampled_url
 }
