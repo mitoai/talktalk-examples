@@ -68,7 +68,7 @@ export class WebWitDispatcher extends Dispatcher<WitWebMessage, WebReply> {
       socket.on('message', async msg => {
         const entities = await witEntitiesFromMessage(msg.message)
         const intent = entities.intent && findBestCandidate(entities.intent)
-        this.handleMessage({...msg, entities, intent: intent ? intent.value : undefined})
+        this.handleMessage({...msg, entities, intent: intent && intent.confidence > 0.8 ? intent.value : undefined})
       })
       socket.join(userId)
     })
