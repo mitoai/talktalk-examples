@@ -65,13 +65,11 @@ export class WebWitDispatcher extends Dispatcher<WitWebMessage, WebReply> {
     io.on('connection', (socket) => {
       const userId = socket.handshake.query.userId
       if (!userId) return
-      console.log('Connected user: ' + userId)
       socket.on('message', async msg => {
         const entities = await witEntitiesFromMessage(msg.message)
         const intent = entities.intent && findBestCandidate(entities.intent)
         this.handleMessage({...msg, entities, intent: intent ? intent.value : undefined})
       })
-      console.log('Joining room ' + userId)
       socket.join(userId)
     })
     io.on('error', (err) => console.error(err))

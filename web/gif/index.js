@@ -40,9 +40,17 @@ class GifHandler extends Handler {
   }
 }
 
+class DefaultHandler extends Handler {
+
+  async handleMessage () {
+    this.sendReply({message: 'Sorry, I didn\'t get that.'})
+  }
+}
+
 const dispatcher: WebWitDispatcher = new WebWitDispatcher()
 
 dispatcher.registerHandler(GreetingHandler)
 dispatcher.registerHandler(GifHandler)
+dispatcher.registerHandler(DefaultHandler)
 
 dispatcher.start()
