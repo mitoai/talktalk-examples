@@ -3,7 +3,7 @@
 import { Handler } from 'talktalk'
 import { findBestCandidate } from '../../utils/wit'
 import { WebWitDispatcher } from '../../utils/web'
-import { fetchGif } from '../../utils/giphy'
+import { fetchGif, fetchRandomGif } from '../../utils/giphy'
 
 class GreetingHandler extends Handler {
   intent = 'greeting'
@@ -38,6 +38,13 @@ class GifHandler extends Handler {
     await this.sendReply({message: 'I found this gif'})
     await this.sendReply({gif})
   }
+
+  async handlePostback (context: {action: 'gif'}) {
+    const gif = await fetchRandomGif()
+    if (!gif) throw new Error('No gif found')
+    await this.sendReply({message: 'I found this gif'})
+    await this.sendReply({gif})
+  }
 }
 
 class DefaultHandler extends Handler {
@@ -53,4 +60,4 @@ dispatcher.registerHandler(GreetingHandler)
 dispatcher.registerHandler(GifHandler)
 dispatcher.registerHandler(DefaultHandler)
 
-dispatcher.start()
+dispatcher.start({name: 'Gif', postbackContext: {action: 'gif'}, _Handler: GifHandler})
