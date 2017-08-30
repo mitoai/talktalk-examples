@@ -1,20 +1,13 @@
 // @flow
 
-import type { BaseMessage } from 'talktalk/lib/dispatcher'
-import type Handler from 'talktalk/lib/handler'
-import type { WitEntities } from './wit'
 import http from 'http'
 import config from 'config'
 import SocketIo from 'socket.io'
-import { Dispatcher } from 'talktalk'
-import { findBestCandidate, witEntitiesFromMessage } from './wit'
+import EventEmitter from 'events'
 
-export type WebMessage = BaseMessage & { message: string }
-export type WebReply = { message: string } | { gif: string }
-export type WitWebMessage = WebMessage & { entities: WitEntities }
-type NamedPostback<C> = { name: string, postbackContext: C, _Handler: Class<Handler<*, *, C, *, *>> }
+type NamedPostback<C> = { name: string, postbackContext: C }
 
-function buildServerHandler (postback: ?NamedPostback<*>) {
+function buildServerHandler<C> (postback: ?NamedPostback<C>) {
   return (req, res) => {
     res.setHeader('Content-Type', 'text/html')
     res.writeHead(200)
@@ -64,33 +57,32 @@ function buildServerHandler (postback: ?NamedPostback<*>) {
   }
 }
 
-export class WebWitDispatcher extends Dispatcher<WitWebMessage, WebReply> {
+export class Web<C> extends EventEmitter {
 
-  io = null
-
-  constructor () {
-    super(async (reply, message) => this && this.io ? this.io.to(message.sender).emit('message', reply) : null)
+  onMessage (listener: (msg: { sender: string, message: string }) => any) {
+    this.on('message', listener)
   }
 
-  start (postback: ?NamedPostback<*>) {
+  onPostback (listener: (postback: { sender: string, context: C }) => any) {
+    this.on('postback', listener)
+  }
+
+  async sendMessage (receiver: string, message: ({ gif: string } | { message: string })) {
+    this.emit('reply', {receiver, message})
+  }
+
+  start (postback: ?NamedPostback<C>) {
     const server = http.createServer(buildServerHandler(postback))
     const io = SocketIo(server)
     io.on('connection', (socket) => {
       const userId = socket.handshake.query.userId
       if (!userId) return
-      socket.on('message', async msg => {
-        const entities = await witEntitiesFromMessage(msg.message)
-        const intent = entities.intent && findBestCandidate(entities.intent)
-        this.handleMessage({sender: userId, type: 'message', entities, intent: intent && intent.confidence > 0.8 ? intent.value : undefined, message: msg.message})
-      })
-      socket.on('postback', async context => {
-        if (!postback) return
-        this.handleMessage(this.buildPostback(postback._Handler, context, userId))
-      })
+      socket.on('message', message => this.emit('message', {...message, sender: userId}))
+      socket.on('postback', context => this.emit('postback', {sender: userId, context}))
       socket.join(userId)
     })
+    this.on('reply', ({receiver, message}) => io.to(receiver).emit('message', message))
     io.on('error', (err) => console.error(err))
-    this.io = io
     server.listen(config.get('web.port'))
   }
 }

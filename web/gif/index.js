@@ -1,9 +1,11 @@
 // @flow
 
-import { Handler } from 'talktalk'
-import { findBestCandidate } from '../../utils/wit'
-import { WebWitDispatcher } from '../../utils/web'
+import { Handler, Dispatcher } from 'talktalk'
+import { findBestCandidate, witEntitiesFromMessage } from '../../utils/wit'
+import { Web } from '../../utils/web'
 import { fetchGif, fetchRandomGif } from '../../utils/giphy'
+import type { BaseMessage } from 'talktalk/lib/dispatcher'
+import type { WitEntities } from '../../utils/wit'
 
 class GreetingHandler extends Handler {
   intent = 'greeting'
@@ -54,10 +56,25 @@ class DefaultHandler extends Handler {
   }
 }
 
-const dispatcher: WebWitDispatcher = new WebWitDispatcher()
+const web = new Web()
+
+export type WebReply = { message: string } | { gif: string }
+export type WebMessage = BaseMessage & { message: string, entities: WitEntities }
+
+const dispatcher: Dispatcher<WebMessage, WebReply> = new Dispatcher((reply, message) => web.sendMessage(message.sender, reply))
 
 dispatcher.registerHandler(GreetingHandler)
 dispatcher.registerHandler(GifHandler)
 dispatcher.registerHandler(DefaultHandler)
 
-dispatcher.start({name: 'Gif', postbackContext: {action: 'gif'}, _Handler: GifHandler})
+web.onMessage(async msg => {
+  const entities = await witEntitiesFromMessage(msg.message)
+  const intentCandidate = findBestCandidate((entities && entities.intent) || [])
+  const intent = intentCandidate && intentCandidate.confidence > 0.5 ? intentCandidate.value : undefined
+  const newMessage = {type: 'message', intent, message: msg.message, sender: msg.sender, entities}
+  dispatcher.handleMessage(newMessage)
+})
+
+web.onPostback(({sender, context}) => dispatcher.handleMessage(dispatcher.buildPostback(GifHandler, context, sender)))
+
+web.start({name: 'Gif', postbackContext: {action: 'gif'}})
