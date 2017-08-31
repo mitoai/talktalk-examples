@@ -19,9 +19,5 @@ tester.dispatcher.registerHandler(HelloWorldHandler)
 
 describe('dispatcher', () => {
   it('should send hello world', async () => {
-    const convo = tester.startConversation()
-    await convo.sendMessage({message: 'Hi there!'})
-    const reply = await convo.expectReply()
-    assert(reply.message = 'Hello world')
   })
 })

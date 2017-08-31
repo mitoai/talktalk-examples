@@ -11,7 +11,6 @@ class GreetingHandler extends Handler {
 
   async handleFirstMessage (msg): Promise<*> {
     this.sendReply({message: 'Hello there!'})
-    return {}
   }
 
 }
@@ -26,19 +25,6 @@ class GifHandler extends Handler {
 
   async handleSessionMessage (msg): Promise<*> {
     const subject = findBestCandidate(msg.entities.subject || [])
-    if (!subject || subject.confidence < 0.5) {
-      await this.sendReply({message: 'Did not get that! Try again'})
-      return {}
-    }
-    const subjectValue = subject.value
-    await this.sendReply({message: `Sure, looking "${subjectValue}" up!!!`})
-    const gif = await fetchGif(subjectValue)
-    if (gif) {
-      await this.sendReply({message: gif})
-    } else {
-      await this.sendReply({message: 'No such gif. Try again'})
-      return {}
-    }
   }
 }
 
