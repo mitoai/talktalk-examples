@@ -50,19 +50,13 @@ class TimerHandler extends Handler {
 
 class SetTimerHandler extends Handler {
 
-  _timer (id) {
-    dispatcher.handleMessage(dispatcher.buildPostback(SetTimerHandler, { id }, 'cli'))
-  }
-
   async handleJump (context: { duration: number }) {
     const id = Math.floor(Math.random() * 100000000).toString()
     setTimeout(() => this._timer(id), context.duration * 1000)
     await this.sendReply({message: `I've set a timer with id ${id}`})
   }
 
-  async handlePostback (postback: { id: string }): * {
-    await this.sendReply({message: `A timer with id ${postback.id} went off`})
-  }
+
 }
 
 class FallbackHandler extends Handler {

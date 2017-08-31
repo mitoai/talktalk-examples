@@ -25,18 +25,20 @@ class GifHandler extends Handler {
   }
 
   async handleSessionMessage (msg): Promise<*> {
-    const candidate = msg.entities.subject && findBestCandidate(msg.entities.subject)
-    if (!candidate || candidate.confidence < 0.5) {
-      await this.sendReply({message: 'Sorry, I did not understand that. Please try again.'})
+    const subject = findBestCandidate(msg.entities.subject || [])
+    if (!subject || subject.confidence < 0.5) {
+      await this.sendReply({message: 'Did not get that! Try again'})
       return {}
     }
-    await this.sendReply({message: `Ok, I'll see what I can find about "${candidate.value}"`})
-    const gif = await fetchGif(candidate.value)
-    if (!gif) {
-      await this.sendReply({message: `I couldn't find any gif about ${candidate.value}`})
-      return
+    const subjectValue = subject.value
+    await this.sendReply({message: `Sure, looking "${subjectValue}" up!!!`})
+    const gif = await fetchGif(subjectValue)
+    if (gif) {
+      await this.sendReply({message: gif})
+    } else {
+      await this.sendReply({message: 'No such gif. Try again'})
+      return {}
     }
-    await this.sendReply({message: `I found this gif: ${gif}`})
   }
 }
 
