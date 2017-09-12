@@ -3,7 +3,7 @@
 import { Handler, Dispatcher } from 'talktalk'
 import { findBestCandidate, witEntitiesFromMessage } from '../../utils/wit'
 import { Web } from '../../utils/web'
-import { fetchGif, fetchRandomGif } from '../../utils/giphy'
+import { fetchGif } from '../../utils/giphy'
 import type { BaseMessage } from 'talktalk/lib/dispatcher'
 import type { WitEntities } from '../../utils/wit'
 import opn from 'opn'
@@ -28,9 +28,6 @@ class GifHandler extends Handler {
 
   }
 
-  async handlePostback (context: {action: 'gif'}) {
-
-  }
 }
 
 class DefaultHandler extends Handler {
