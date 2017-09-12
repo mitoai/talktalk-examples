@@ -6,7 +6,6 @@ import { Web } from '../../utils/web'
 import { fetchGif } from '../../utils/giphy'
 import type { BaseMessage } from 'talktalk/lib/dispatcher'
 import type { WitEntities } from '../../utils/wit'
-import opn from 'opn'
 
 class GreetingHandler extends Handler {
   intent = 'greeting'
@@ -53,5 +52,3 @@ web.onMessage(async msg => {
 })
 
 web.start()
-
-opn('http://localhost:3001')

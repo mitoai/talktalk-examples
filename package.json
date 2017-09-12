@@ -7,7 +7,8 @@
     "test": "npm run test:lint && npm run test:flow && npm run test:unit",
     "test:lint": "eslint .",
     "test:flow": "flow .",
-    "test:unit": "mocha -R spec --require babel-register \"test/**/*.test.js\""
+    "test:unit": "mocha -R spec --require babel-register \"test/**/*.test.js\"",
+    "demo": "(sleep 2 && open http://localhost:3001 &) && nodemon --exec babel-node ./web/gif"
   },
   "repository": {
     "type": "git",
@@ -23,7 +24,6 @@
     "config": "^1.26.2",
     "mocha": "^3.5.0",
     "node-wit": "^4.3.0",
-    "opn": "^5.1.0",
     "socket.io": "^2.0.3",
     "superagent": "^3.6.0",
     "talktalk": "0.0.4"
