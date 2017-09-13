@@ -1,6 +1,7 @@
 // @flow
 import { Wit } from 'node-wit'
 import config from 'config'
+import type { BaseMessage } from 'talktalk/lib/dispatcher'
 
 const accessToken = config.get('wit.accessToken')
 const wit = new Wit({accessToken})
@@ -15,11 +16,13 @@ export type WitEntities = {
   [string]: WitEntityMatch[]
 }
 
-export function findBestCandidate (matches: WitEntityMatch[]): WitEntityMatch {
-  return matches
-    .reduce((i1, i2) => i1.confidence > i2.confidence
-      ? i1
-      : i2, {value: '', confidence: 0})
+export type WebReply = { message: string } | { gif: string }
+export type WebMessage = BaseMessage & { message: string, entities: WitEntities }
+
+export function findBestCandidate (matches?: WitEntityMatch[], confidence?: number = 0): ?WitEntityMatch {
+  return (matches || [])
+    .sort((i1, i2) => i2.confidence - i1.confidence)
+    .filter(i => i.confidence >= confidence)[0]
 }
 
 export async function witEntitiesFromMessage (message: string): Promise<WitEntities> {

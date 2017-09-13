@@ -4,9 +4,9 @@ import { Handler, Dispatcher } from 'talktalk'
 import { findBestCandidate, witEntitiesFromMessage } from '../../utils/wit'
 import { Web } from '../../utils/web'
 import { fetchGif } from '../../utils/giphy'
-import type { BaseMessage } from 'talktalk/lib/dispatcher'
-import type { WitEntities } from '../../utils/wit'
+import type { WebMessage, WebReply } from '../../utils/wit'
 
+/*
 class GreetingHandler extends Handler {
   intent = 'greeting'
 
@@ -35,19 +35,22 @@ class DefaultHandler extends Handler {
 
   }
 }
+*/
 
 const web = new Web()
-
-export type WebReply = { message: string } | { gif: string }
-export type WebMessage = BaseMessage & { message: string, entities: WitEntities }
 
 const dispatcher: Dispatcher<WebMessage, WebReply> = new Dispatcher((reply, message) => web.sendMessage(message.sender, reply))
 
 web.onMessage(async msg => {
   const entities = await witEntitiesFromMessage(msg.message)
-  const intentCandidate = findBestCandidate((entities && entities.intent) || [])
-  const intent = intentCandidate && intentCandidate.confidence > 0.5 ? intentCandidate.value : undefined
-  const newMessage = {type: 'message', intent, message: msg.message, sender: msg.sender, entities}
+  const intentCandidate = findBestCandidate(entities.intent, 0.5)
+  const newMessage = {
+    type: 'message',
+    intent: intentCandidate ? intentCandidate.value : undefined,
+    message: msg.message,
+    sender: msg.sender,
+    entities
+  }
   dispatcher.handleMessage(newMessage)
 })
 
