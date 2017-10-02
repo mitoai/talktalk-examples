@@ -25,7 +25,7 @@
     "node-wit": "^4.3.0",
     "socket.io": "^2.0.3",
     "superagent": "^3.6.0",
-    "talktalk": "0.0.4"
+    "talktalk": "0.0.5"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
