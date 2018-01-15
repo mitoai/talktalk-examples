@@ -6,7 +6,7 @@ import { Handler, Dispatcher } from 'talktalk'
 import { findBestCandidate } from '../../utils/wit'
 import { fetchGif } from '../../utils/giphy'
 
-class GreetingHandler extends Handler {
+class GreetingHandler extends Handler<*, *, *, *> {
   intent = 'greeting'
 
   async handleFirstMessage (msg): Promise<*> {
@@ -16,7 +16,7 @@ class GreetingHandler extends Handler {
 
 }
 
-class GifHandler extends Handler {
+class GifHandler extends Handler<*, *, *, *> {
   intent = 'gif'
 
   async handleFirstMessage (msg): Promise<*> {

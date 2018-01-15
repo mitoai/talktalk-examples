@@ -4,7 +4,7 @@ import { startCliBot, cliReplier } from '../../utils/cli'
 import type { CliMessage, CliReply } from '../../utils/cli'
 import { Dispatcher, Handler } from 'talktalk'
 
-class CounterHandler extends Handler {
+class CounterHandler extends Handler<*, *, *, *> {
   async handleFirstMessage (message: CliMessage): Promise<*> {
     await this.sendReply({message: 'You have sent 1 message'})
     return {count: 1}

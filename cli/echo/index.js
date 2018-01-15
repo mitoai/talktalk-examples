@@ -4,7 +4,7 @@ import { cliReplier, startCliBot } from '../../utils/cli'
 import type { CliMessage, CliReply } from '../../utils/cli'
 import { Dispatcher, Handler } from 'talktalk'
 
-class EchoHandler extends Handler {
+class EchoHandler extends Handler<*, *, *, *> {
   async handleFirstMessage (message: CliMessage): Promise<*> {
     await this.sendReply({message: message.message})
   }

@@ -21,11 +21,11 @@
   "homepage": "https://github.com/mitoai/talktalk-examples#readme",
   "dependencies": {
     "config": "^1.26.2",
-    "mocha": "^3.5.0",
+    "mocha": "^4.1.0",
     "node-wit": "^4.3.0",
     "socket.io": "^2.0.3",
     "superagent": "^3.6.0",
-    "talktalk": "0.0.4"
+    "talktalk": "0.0.9"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -40,6 +40,6 @@
     "eslint-plugin-node": "^5.1.1",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
-    "flow-bin": "^0.53.1"
+    "flow-bin": "^0.63.1"
   }
 }

@@ -4,7 +4,7 @@ import type { CliReply, WitCliMessage } from '../../utils/cli'
 import { Dispatcher, Handler } from 'talktalk'
 import { findBestCandidate } from '../../utils/wit'
 
-class GreetingHandler extends Handler {
+class GreetingHandler extends Handler<*, *, *, *> {
   intent = 'greeting'
 
   async handleFirstMessage (msg): Promise<*> {
@@ -24,7 +24,7 @@ function findDuration (message): ?number {
 
 const dispatcher: Dispatcher<WitCliMessage, CliReply> = new Dispatcher(cliReplier)
 
-class TimerHandler extends Handler {
+class TimerHandler extends Handler<*, *, *, *> {
   intent = 'timer'
 
   async handleFirstMessage (msg): Promise<*> {
@@ -48,10 +48,10 @@ class TimerHandler extends Handler {
   }
 }
 
-class SetTimerHandler extends Handler {
+class SetTimerHandler extends Handler<*, *, *, *> {
 
   _timer (id) {
-    dispatcher.handleMessage(dispatcher.buildPostback(SetTimerHandler, { id }, 'cli'))
+    dispatcher.handleMessage(dispatcher.buildPostback(SetTimerHandler, {id}, 'cli'))
   }
 
   async handleJump (context: { duration: number }) {
@@ -65,7 +65,7 @@ class SetTimerHandler extends Handler {
   }
 }
 
-class FallbackHandler extends Handler {
+class FallbackHandler extends Handler <*, *, *, *> {
 
   async handleMessage () {
     await this.sendReply({message: 'Sorry. I did not get that.'})

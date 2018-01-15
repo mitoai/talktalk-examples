@@ -7,7 +7,7 @@ import { fetchGif, fetchRandomGif } from '../../utils/giphy'
 import type { BaseMessage } from 'talktalk/lib/dispatcher'
 import type { WitEntities } from '../../utils/wit'
 
-class GreetingHandler extends Handler {
+class GreetingHandler extends Handler<*, *, *, *> {
   intent = 'greeting'
 
   async handleFirstMessage (msg): Promise<*> {
@@ -17,7 +17,7 @@ class GreetingHandler extends Handler {
 
 }
 
-class GifHandler extends Handler {
+class GifHandler extends Handler<*, *, *, *> {
   intent = 'gif'
 
   async handleFirstMessage (msg): Promise<*> {
@@ -41,7 +41,7 @@ class GifHandler extends Handler {
     await this.sendReply({gif})
   }
 
-  async handlePostback (context: {action: 'gif'}) {
+  async handleJump (context: { action: 'gif' }) {
     const gif = await fetchRandomGif()
     if (!gif) throw new Error('No gif found')
     await this.sendReply({message: 'I found this gif'})
@@ -49,7 +49,7 @@ class GifHandler extends Handler {
   }
 }
 
-class DefaultHandler extends Handler {
+class DefaultHandler extends Handler<*, *, *, *> {
 
   async handleMessage () {
     this.sendReply({message: 'Sorry, I didn\'t get that.'})
